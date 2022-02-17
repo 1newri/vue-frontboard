@@ -1,35 +1,24 @@
 <template>
-  <div class="board-list">
+  <div class="board-detail">
     <table>
-      <thead>
       <tr>
         <th>No</th>
-        <th>제목</th>
-        <th>작성자</th>
-        <th>등록일시</th>
+        <td>{{ idx }}</td>
       </tr>
-      </thead>
-
-      <tbody>
-        <tr v-for="(row, idx) in list" :key="idx">
-          <td>{{ row.idx }}></td>
-          <td><a v-on:click="fnView(row.idx)">{{ row.title }}</a></td>
-          <td>{{ row.author }}</td>
-          <td>{{ row.createdAt }}</td>
-        </tr>
-      </tbody>
+      <tr>
+        <th>제목</th>
+        <td>{{ title }}</td>
+      </tr>
+      <tr>
+        <th>작성자</th>
+        <td>{{ author }}</td>
+      </tr>
+      <tr>
+        <th>등록일시</th>
+        <td>{{ createdAt }}</td>
+      </tr>
     </table>
-    <div>
-      <span>&lt;&lt;</span>
-      &nbsp;
-      <span>&lt;</span>
-      &nbsp;
-      1
-      &nbsp;
-      <span>&gt;</span>
-      &nbsp;
-      <span>&gt;&gt;</span>
-    </div>
+
   </div>
 </template>
 
@@ -37,56 +26,39 @@
 
 export default {
   data() {
-    // 보여줄 데이터 json
+    // 변수생성
     return {
-      requestBody: {}, //리스트 페이지 데이터전송
-      list: {}, //리스트 데이터
-      no: '', //게시판 숫자처리
-      paging: {}, //페이징 데이터
-      page: this.$route.query.page ? this.$route.query.page : 1,
-      size: this.$route.query.size ? this.$route.query.size : 10,
-      keyword: this.$route.query.keyword,
+      requestBody: this.$route.query,
+      idx: this.$route.query.idx,
+      no : '',
+      title : '',
+      author : '',
+      createdAt : ''
     }
   }, mounted() {
     //  DOM 조작에 대한 목적
-    this.fnGetList();
+     this.fnGetData(this.idx);
   }, methods: {
-    // 화면에서 사용할 method
-    fnGetList() {
-      /************************************************
-       axios 로 backend 호출해서 데이터 가져올 예정
-       ************************************************/
-      //axios body에 requestBody 추가해서 요청하기
-      // this.requestBody = { // 데이터 전송
-      //   keyword: this.keyword,
-      //   page: this.page,
-      //   size: this.size
-      // }
-      this.$axios.get(this.$serverUrl + "/board/list")
-          .then((res) => {
-            console.log(res.data)
-            this.list = res.data
-            this.no = res.data.length
-          })
-          .then((err) => {
-            console.log(err)
-          })
-    },
-    fnView(idx) {
-      /*this.requestBody.idx = idx;
-      this.$router.push({
-        path: './detail',
-        query: this.requestBody
-      })*/
-      alert(idx);
-    }
+     fnGetData(idx) {
+       this.$axios.get(this.$serverUrl + "/board/" + idx)
+           .then((res) => {
+             console.log(res.data)
+             this.no = res.data.idx
+             this.title = res.data.title
+             this.author = res.data.author
+             this.createdAt = res.data.createdAt
+           })
+           .then((err) => {
+             console.log(err)
+           })
+     }
   }
 }
 </script>
 
 <style scoped>
 
-.board-list {
+.board-detail {
   width: 400px;
   margin: auto;
 }

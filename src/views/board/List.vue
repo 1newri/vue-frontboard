@@ -13,7 +13,7 @@
       <tbody>
         <tr v-for="(row, idx) in list" :key="idx">
           <td>{{ row.idx }}></td>
-          <td><a v-on:click="fnView(row.idx)">{{ row.title }}</a></td>
+          <td><a v-on:click="fnView(`${row.idx}`)">{{ row.title }}</a></td>
           <td>{{ row.author }}</td>
           <td>{{ row.createdAt }}</td>
         </tr>
@@ -73,12 +73,11 @@ export default {
           })
     },
     fnView(idx) {
-      /*this.requestBody.idx = idx;
+      this.requestBody.idx = idx;
       this.$router.push({
         path: './detail',
         query: this.requestBody
-      })*/
-      alert(idx);
+      })
     }
   }
 }
